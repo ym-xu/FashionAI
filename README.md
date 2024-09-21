@@ -50,7 +50,7 @@ FashionAI enables users to generate custom fashion designs using AI, create prod
    ```
    pip install -r requirements.txt
    ```
-3. Set up environment variables (including database URL, Cloudflare and SendGrid API keys).
+3. Set up environment variables by copying `.env.example` to `.env` and filling in the values.
 4. Run the FastAPI server:
    ```
    uvicorn app.main:app --reload
@@ -63,8 +63,17 @@ The backend provides several API endpoints, including:
 - User authentication: `/api/auth/login`, `/api/auth/register`
 - User profile: `/api/users/me`
 - Product management: `/api/products/`
+- File upload: `/api/upload-to-cloudflare`
 
 For a complete list of endpoints, refer to the FastAPI documentation available at `/docs` when running the server.
+
+## Image Storage
+
+The project uses Cloudflare Images for storing user-generated images. The `/api/upload-to-cloudflare` endpoint handles file uploads to Cloudflare's service.
+
+## CORS Configuration
+
+The backend is configured to allow CORS for the frontend running on `http://localhost:3000`. If you need to change this, update the `allow_origins` parameter in the `app.add_middleware()` call in `main.py`.
 
 ## Key Features
 
@@ -77,17 +86,13 @@ For a complete list of endpoints, refer to the FastAPI documentation available a
 
 ## Environment Variables
 
-Ensure the following environment variables are set:
+Ensure the following environment variables are set in your `.env` file:
 
-- `SENDGRID_API_KEY`: For sending verification emails
-- `SENDGRID_SENDER_EMAIL`: Email address for sending verification emails
-- Database configuration (e.g., `DATABASE_URL`)
-- Cloudflare-related keys for image storage and AI processing
+- `CLOUDFLARE_ACCOUNT_ID`: Your Cloudflare account ID
+- `CLOUDFLARE_API_KEY`: Your Cloudflare API key
+- `CLOUDFLARE_ACCOUNT_HASH`: Your Cloudflare account hash
+- `DYNAMIC_MOCKUPS_API_KEY`: API key for Dynamic Mockups
+- `DATABASE_URL`: URL for your PostgreSQL database
+- `SECRET_KEY`: Secret key for JWT token generation
 
-## Contributing
-
-Contributions to FashionAI are welcome. Please ensure that your code adheres to the project's coding standards and include tests for new features.
-
-## License
-
-[Add your license information here]
+You can use the provided `.env.example` file as a template.
