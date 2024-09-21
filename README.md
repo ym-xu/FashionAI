@@ -77,12 +77,20 @@ The backend is configured to allow CORS for the frontend running on `http://loca
 
 ## Key Features
 
-1. AI-Powered Image Generation: Utilizes Stable Diffusion XL Lightning model via Cloudflare Workers.
-2. User Authentication: Secure login and registration system with email verification.
-3. Product Creation: Users can generate images and create product mockups for various items like T-shirts, hoodies, and wall art.
-4. Marketplace: A platform for users to list and browse AI-generated fashion products.
-5. User Profiles: Customizable user profiles with bio and personal links.
-6. Responsive Design: Masonry layout for displaying products and user-generated content.
+1. User Authentication: Secure login and registration system.
+2. Profile Management: Users can create and edit their profiles.
+3. AI-Powered Image Generation: Utilizes Stable Diffusion XL Lightning model via Cloudflare Workers for text-to-image generation.
+4. Studio Interface: A user-friendly interface for creating AI-generated fashion designs.
+5. Product Preview: Users can preview their generated designs on various product types.
+6. Responsive Design: Ensures a seamless experience across different devices.
+
+## Upcoming Features
+
+1. Marketplace Interface: A platform for users to list and browse AI-generated fashion products.
+2. Product Publishing: Ability to publish created products to the marketplace.
+3. Favorites System: Users can mark and save their favorite designs.
+4. Messaging Center: Communication system for users.
+5. Recommendation System: Personalized product recommendations for users.
 
 ## Environment Variables
 
