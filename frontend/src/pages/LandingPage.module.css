@@ -1,0 +1,12 @@
+.imageContainer {
+    perspective: 1000px;
+  }
+  
+.imageContainer img {
+transition: transform 0.6s;
+transform-style: preserve-3d;
+}
+
+.imageFlip {
+transform: rotateY(180deg);
+}
