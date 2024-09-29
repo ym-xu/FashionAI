@@ -1,13 +1,16 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from app.crud import product as crud_product
-from app.models import User
-from app.schemas import Product, ProductCreate
+from app.schemas import Product, ProductCreate, ProductOut
 from app.api import deps
 from app import models
+from app.models import User
 import os
 import httpx
 from tenacity import retry, stop_after_attempt, wait_fixed
+import logging
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -18,6 +21,26 @@ def create_product(
     current_user: User = Depends(deps.get_current_user),
 ):
     return crud_product.create_product(db=db, product=product, user_id=current_user.id)
+
+@router.get("/", response_model=list[ProductOut])
+def get_products(
+    db: Session = Depends(deps.get_db),
+    skip: int = Query(0, ge=0),
+    limit: int = Query(100, ge=1, le=100),
+    product_type: str = Query(None)
+):
+    products_with_creator = crud_product.get_products(db, skip=skip, limit=limit, product_type=product_type)
+    logger.info(f"Products with creator: {products_with_creator}")
+    return [ProductOut(
+        id=product.id,
+        user_id=product.user_id,
+        creator_name=creator_name,
+        prompt=product.prompt,
+        product_type=product.product_type,
+        generated_image_url=product.generated_image_url,
+        product_image_url=product.product_image_url,
+        created_at=product.created_at
+    ) for product, creator_name in products_with_creator]
 
 @router.get("/user/", response_model=list[Product])
 def read_user_products(

@@ -11,4 +11,4 @@ class TokenPayload(BaseModel):
     sub: int = None
 
 from .user import User, UserCreate, UserUpdate, UserInDB
-from .product import Product, ProductCreate
+from .product import Product, ProductCreate, ProductOut
