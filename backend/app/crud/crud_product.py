@@ -16,11 +16,16 @@ def create_product(db: Session, product: ProductCreate, user_id: int):
     db.refresh(db_product)
     return db_product
 
-def get_products(db: Session, skip: int = 0, limit: int = 100, product_type: str = None):
+def get_products(db: Session, skip: int = 0, limit: int = 100, product_type: str = None, search: str = None):
     query = db.query(Product, User.username.label('creator_name')).join(User, Product.user_id == User.id)
     if product_type:
         query = query.filter(Product.product_type == product_type)
-    return query.offset(skip).limit(limit).all()
+    if search:
+        query = query.filter(
+            (Product.prompt.ilike(f"%{search}%")) |
+            (User.username.ilike(f"%{search}%"))
+        )
+    return query.order_by(Product.created_at.desc()).offset(skip).limit(limit).all()
 
 def get_products_by_user(db: Session, user_id: int, skip: int = 0, limit: int = 100):
     return db.query(Product).filter(Product.user_id == user_id).offset(skip).limit(limit).all()

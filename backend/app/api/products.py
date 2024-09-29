@@ -27,9 +27,10 @@ def get_products(
     db: Session = Depends(deps.get_db),
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=100),
-    product_type: str = Query(None)
+    product_type: str = Query(None),
+    search: str = Query(None)
 ):
-    products_with_creator = crud_product.get_products(db, skip=skip, limit=limit, product_type=product_type)
+    products_with_creator = crud_product.get_products(db, skip=skip, limit=limit, product_type=product_type, search=search)
     logger.info(f"Products with creator: {products_with_creator}")
     return [ProductOut(
         id=product.id,
