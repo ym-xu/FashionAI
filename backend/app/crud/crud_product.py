@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session, joinedload
 from app.models.product import Product
 from app.models.user import User
 from app.schemas.product import ProductCreate
+from app.models.favorite import Favorite
 
 def create_product(db: Session, product: ProductCreate, user_id: int):
     db_product = Product(
@@ -28,4 +29,9 @@ def get_products(db: Session, skip: int = 0, limit: int = 100, product_type: str
     return query.order_by(Product.created_at.desc()).offset(skip).limit(limit).all()
 
 def get_products_by_user(db: Session, user_id: int, skip: int = 0, limit: int = 100):
-    return db.query(Product).filter(Product.user_id == user_id).offset(skip).limit(limit).all()
+    return db.query(Product).filter(Product.user_id == user_id).order_by(Product.created_at.desc()).offset(skip).limit(limit).all()
+
+def get_favorite_products(db: Session, user_id: int):
+    return db.query(Product).join(Favorite).filter(Favorite.user_id == user_id).options(
+        joinedload(Product.user)
+    ).all()

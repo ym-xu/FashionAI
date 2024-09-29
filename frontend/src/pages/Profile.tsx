@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { Label } from "../components/ui/label";
 import { Textarea } from "../components/ui/textarea";
@@ -8,6 +8,19 @@ import Masonry from 'react-masonry-css';
 import { Heart, Image as ImageIcon } from "lucide-react";
 import AppleButton from "../components/AppleButton";
 import AppleInput from "../components/AppleInput";
+
+interface Product {
+  id: number;
+  prompt?: string;
+  product_type?: string;
+  product_image_url?: string;
+  generated_image_url?: string;
+  creator_name?: string;
+  created_at?: string;
+  name?: string;
+  image?: string;
+  type?: string;
+}
 
 const mockFavoriteProducts = [
   { id: 1, name: "Product 1", image: "https://placehold.co/300x300?text=Product+1", type: "Favorite" },
@@ -44,21 +57,37 @@ const Profile = () => {
   });
   const [isEditing, setIsEditing] = useState(false);
   const [activeTab, setActiveTab] = useState('All');
+  const [likedProducts, setLikedProducts] = useState<Product[]>([]);
+  const [generatedProducts, setGeneratedProducts] = useState<Product[]>([]);
+
+  const allUniqueProducts = useMemo(() => {
+    const allProducts = [...likedProducts, ...generatedProducts];
+    return Array.from(new Set(allProducts.map(item => item.id)))
+      .map(id => allProducts.find(item => item.id === id));
+  }, [likedProducts, generatedProducts]);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await axios.get('/api/users/me', {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
+        const [userResponse, likedResponse, generatedResponse] = await Promise.all([
+          axios.get('/api/users/me', {
+            headers: { Authorization: `Bearer ${token}` }
+          }),
+          axios.get('/api/products/user/favorites', {
+            headers: { Authorization: `Bearer ${token}` }
+          }),
+          axios.get('/api/products/user/created', {
+            headers: { Authorization: `Bearer ${token}` }
+          })
+        ]);
         setUserData({
-          ...response.data,
-          joined_date: response.data.joined_date || 'August 2024',
-          location: response.data.location || ''
+          ...userResponse.data,
+          joined_date: userResponse.data.created_at || 'August 2024',
+          location: userResponse.data.location || ''
         });
+        setLikedProducts(likedResponse.data);
+        setGeneratedProducts(generatedResponse.data);
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
@@ -188,40 +217,45 @@ const Profile = () => {
         </div>
 
         <ScrollArea className="h-[calc(100vh-300px)]">
-          <Masonry
-            breakpointCols={{
-              default: 3,
-              1100: 2,
-              700: 1
-            }}
-            className="my-masonry-grid"
-            columnClassName="my-masonry-grid_column"
-          >
-            {(activeTab === 'All' ? [...mockFavoriteProducts, ...mockGeneratedImages] :
-              activeTab === 'Generated' ? mockGeneratedImages :
-              mockFavoriteProducts).map((item) => (
-              <div key={item.id} className="mb-4">
-                <div className="relative group">
-                  {item.image.startsWith('http') ? (
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="w-full object-cover rounded-lg"
-                    />
-                  ) : (
-                    <PlaceholderImage text={item.name} className="w-full rounded-lg" />
-                  )}
-                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-opacity duration-300 rounded-lg flex items-center justify-center">
-                    <AppleButton className="opacity-0 group-hover:opacity-100 transition-opacity duration-300" variant="secondary">
-                      <Heart className="mr-2 h-4 w-4" /> Like
-                    </AppleButton>
+          <div className="p-6">
+            <Masonry
+              breakpointCols={{
+                default: 4,
+                1100: 3,
+                700: 2,
+                500: 1
+              }}
+              className="my-masonry-grid"
+              columnClassName="my-masonry-grid_column"
+            >
+              {(activeTab === 'All' 
+                ? allUniqueProducts
+                : activeTab === 'Generated' ? generatedProducts 
+                : likedProducts
+              ).filter((item): item is Product => item !== undefined)
+              .map((item: Product) => (
+                <div key={item.id} className="mb-6 transform transition-all duration-200 hover:scale-105">
+                  <div className="bg-white rounded-lg overflow-hidden shadow-md">
+                    <div className="relative group">
+                      <img
+                        src={item.product_image_url || item.image || item.generated_image_url}
+                        alt={item.prompt || item.name || 'Product image'}
+                        className="w-full object-cover rounded-t-lg"
+                      />
+                    </div>
+                    <div className="p-4">
+                      <p className="text-sm text-gray-600 mt-1">
+                        {item.creator_name || 'Unknown Creator'}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {item.created_at ? new Date(item.created_at).toLocaleDateString() : 'Unknown Date'}
+                      </p>
+                    </div>
                   </div>
                 </div>
-                <h3 className="font-semibold mt-2">{item.name}</h3>
-                <p className="text-sm text-muted-foreground">{item.type}</p>
-              </div>
-            ))}
-          </Masonry>
+              ))}
+            </Masonry>
+          </div>
         </ScrollArea>
       </div>
     </div>

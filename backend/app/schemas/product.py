@@ -31,3 +31,6 @@ class ProductOut(BaseModel):
 
     class Config:
         orm_mode = True
+
+class ProductLike(BaseModel):
+    product_id: int

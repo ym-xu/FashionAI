@@ -99,6 +99,36 @@ export default function Marketplace() {
 
   const productTypes = ["All", "T-Shirt", "Hoodie", "Wall Art", "Mug", "Sweatshirt", "Pillow", "Tote Bag"];
 
+  const handleLike = async (productId: number) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('You need to be logged in to like a product');
+        return;
+      }
+      const response = await axios.post(
+        'http://localhost:8000/api/products/like',
+        { product_id: productId },
+        {
+          headers: { 
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      console.log('Product liked successfully', response.data);
+      // 更新UI逻辑，例如改变心形图标的颜色
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.error('Error liking product:', error.response.data);
+        alert(error.response.data.detail || 'An error occurred while liking the product');
+      } else {
+        console.error('Error liking product:', error);
+        alert('An unexpected error occurred');
+      }
+    }
+  };
+
   return (
     <div className="flex flex-col h-screen bg-gray-50">
       <div className="p-6 border-b bg-white shadow-sm">
@@ -159,7 +189,11 @@ export default function Marketplace() {
                         className="w-full object-cover rounded-t-lg"
                       />
                       <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-opacity duration-300 rounded-t-lg flex items-center justify-center">
-                        <Button className="opacity-0 group-hover:opacity-100 transition-opacity duration-300" variant="secondary">
+                        <Button 
+                          className="opacity-0 group-hover:opacity-100 transition-opacity duration-300" 
+                          variant="secondary"
+                          onClick={() => handleLike(product.id)}
+                        >
                           <Heart className="mr-2 h-4 w-4" /> Like
                         </Button>
                       </div>

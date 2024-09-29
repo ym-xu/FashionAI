@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
-from app.crud import product as crud_product
+from app.crud import product as crud_product, crud_favorite
 from app.schemas import Product, ProductCreate, ProductOut
 from app.api import deps
 from app import models
@@ -9,6 +9,7 @@ import os
 import httpx
 from tenacity import retry, stop_after_attempt, wait_fixed
 import logging
+from app.schemas.product import ProductLike
 
 logger = logging.getLogger(__name__)
 
@@ -97,3 +98,52 @@ async def generate_product_image(
         import traceback
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {str(e)}")
+
+@router.get("/user/created", response_model=list[ProductOut])
+def get_user_created_products(
+    db: Session = Depends(deps.get_db),
+    current_user: User = Depends(deps.get_current_user),
+):
+    products = crud_product.get_products_by_user(db, user_id=current_user.id)
+    return [ProductOut(
+        id=product.id,
+        user_id=product.user_id,
+        creator_name=current_user.username,
+        prompt=product.prompt,
+        product_type=product.product_type,
+        generated_image_url=product.generated_image_url,
+        product_image_url=product.product_image_url,
+        created_at=product.created_at
+    ) for product in products]
+
+@router.get("/user/favorites", response_model=list[ProductOut])
+def get_user_favorite_products(
+    db: Session = Depends(deps.get_db),
+    current_user: User = Depends(deps.get_current_user),
+):
+    products = crud_product.get_favorite_products(db, user_id=current_user.id)
+    return [ProductOut(
+        id=product.id,
+        user_id=product.user_id,
+        creator_name=product.user.username,
+        prompt=product.prompt,
+        product_type=product.product_type,
+        generated_image_url=product.generated_image_url,
+        product_image_url=product.product_image_url,
+        created_at=product.created_at
+    ) for product in products]
+
+@router.post("/like", response_model=dict)
+def like_product(
+    product_like: ProductLike,
+    db: Session = Depends(deps.get_db),
+    current_user: User = Depends(deps.get_current_user),
+):
+    try:
+        favorite = crud_favorite.create_favorite(db, user_id=current_user.id, product_id=product_like.product_id)
+        return {"status": "success", "message": "Product liked successfully"}
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error(f"Error liking product: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
