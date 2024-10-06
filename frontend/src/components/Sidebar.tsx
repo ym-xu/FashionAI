@@ -101,12 +101,12 @@ const Sidebar: React.FC = () => {
           <SidebarButton 
             icon={Settings} 
             isActive={location.pathname === "/settings"} 
-            href="/settings" 
+            href="/marketplace" 
           />
           <SidebarButton 
             icon={HelpCircle} 
             isActive={location.pathname === "/help"} 
-            href="/help" 
+            href="/marketplace" 
           />
           <button 
             onClick={() => setIsNotificationOpen(!isNotificationOpen)}
