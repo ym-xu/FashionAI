@@ -84,10 +84,10 @@ export default function LandingPage() {
       });
       const { access_token } = response.data;
       localStorage.setItem('token', access_token);
-      navigate('/dashboard');
+      navigate('/marketplace'); // 这里改为 '/marketplace'
     } catch (error) {
-      console.error('Login failed:', error);
-      // Add error handling, e.g., display an error message
+      console.error('登录失败:', error);
+      // 添加错误处理,例如显示错误消息
     }
   };
 
@@ -116,7 +116,7 @@ export default function LandingPage() {
       console.log('Register response:', response.data);
       const { access_token } = response.data;
       localStorage.setItem('token', access_token);
-      navigate('/dashboard');
+      navigate('/marketplace'); // Changed from '/dashboard' to '/marketplace'
     } catch (error) {
       console.error('Registration failed:', error);
     }
