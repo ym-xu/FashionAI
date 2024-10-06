@@ -9,7 +9,8 @@ import {
   Bell,
   User,
   LogOut,
-  CreditCard
+  CreditCard,
+  X  // Add this line
 } from "lucide-react";
 import axios from 'axios';
 import Studio from '../pages/Studio';
@@ -39,6 +40,7 @@ const Sidebar: React.FC = () => {
   const navigate = useNavigate();
   const [userData, setUserData] = useState({ username: '', email: '' });
   const [isStudioOpen, setIsStudioOpen] = useState(false);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -106,11 +108,15 @@ const Sidebar: React.FC = () => {
             isActive={location.pathname === "/help"} 
             href="/help" 
           />
-          <SidebarButton 
-            icon={Bell} 
-            isActive={location.pathname === "/notifications"} 
-            href="/notifications" 
-          />
+          <button 
+            onClick={() => setIsNotificationOpen(!isNotificationOpen)}
+            className={cn(
+              "w-10 h-10 flex items-center justify-center rounded-lg transition-all duration-200",
+              "text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+            )}
+          >
+            <Bell className="h-5 w-5" />
+          </button>
           <button 
             onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
             className="w-10 h-10 bg-gradient-to-br from-orange-400 to-pink-500 rounded-lg flex items-center justify-center text-white font-bold text-sm shadow-md"
@@ -153,6 +159,21 @@ const Sidebar: React.FC = () => {
                 Log out
               </button>
             </div>
+          </div>
+        </div>
+      )}
+      {isNotificationOpen && (
+        <div className="fixed left-16 bottom-0 w-64 bg-white border border-gray-200 rounded-tr-lg shadow-lg z-50">
+          <div className="p-4">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold">Welcome!</h2>
+              <button onClick={() => setIsNotificationOpen(false)} className="text-gray-500 hover:text-gray-700">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <p className="text-gray-600">
+              Thank you for using our application. We hope you enjoy your experience!
+            </p>
           </div>
         </div>
       )}
