@@ -52,13 +52,13 @@ const Profile = () => {
         setIsLoading(true);
         const token = localStorage.getItem('token');
         const [userResponse, likedResponse, generatedResponse] = await Promise.all([
-          axios.get('/api/users/me', {
+          axios.get(`${API_BASE_URL}/api/users/me`, {
             headers: { Authorization: `Bearer ${token}` }
           }),
-          axios.get('/api/products/user/favorites', {
+          axios.get(`${API_BASE_URL}/api/products/user/favorites`, {
             headers: { Authorization: `Bearer ${token}` }
           }),
-          axios.get('/api/products/user/created', {
+          axios.get(`${API_BASE_URL}/api/products/user/created`, {
             headers: { Authorization: `Bearer ${token}` }
           })
         ]);
@@ -86,7 +86,7 @@ const Profile = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      await axios.put('/api/users/me', userData, {
+      await axios.put(`${API_BASE_URL}/api/users/me`, userData, {
         headers: {
           Authorization: `Bearer ${token}`
         }
