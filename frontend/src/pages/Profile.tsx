@@ -38,6 +38,7 @@ const Profile = () => {
   const [activeTab, setActiveTab] = useState('All');
   const [likedProducts, setLikedProducts] = useState<Product[]>([]);
   const [generatedProducts, setGeneratedProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const allUniqueProducts = useMemo(() => {
     const allProducts = [...likedProducts, ...generatedProducts];
@@ -48,6 +49,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
+        setIsLoading(true);
         const token = localStorage.getItem('token');
         const [userResponse, likedResponse, generatedResponse] = await Promise.all([
           axios.get('/api/users/me', {
@@ -69,6 +71,8 @@ const Profile = () => {
         setGeneratedProducts(generatedResponse.data);
       } catch (error) {
         console.error('Error fetching user data:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchUserData();
@@ -95,10 +99,13 @@ const Profile = () => {
 
   return (
     <div className="container mx-auto p-4">
+      {if (isLoading) {
+        return <div>Loading...</div>;
+      }}
       <div className="flex items-start mb-8">
         <Avatar className="w-24 h-24 mr-4">
           <AvatarImage src={userData.personal_link} alt={userData.username} />
-          <AvatarFallback>{userData.username.substring(0, 2).toUpperCase()}</AvatarFallback>
+          <AvatarFallback>{userData.username ? userData.username.substring(0, 2).toUpperCase() : 'U'}</AvatarFallback>
         </Avatar>
         <div className="flex-grow">
           <div className="flex justify-between items-center mb-2">
