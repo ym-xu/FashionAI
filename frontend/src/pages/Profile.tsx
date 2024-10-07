@@ -8,6 +8,7 @@ import Masonry from 'react-masonry-css';
 import {Image as ImageIcon } from "lucide-react";
 import AppleButton from "../components/AppleButton";
 import AppleInput from "../components/AppleInput";
+import { API_BASE_URL } from '../config';
 
 interface Product {
   id: number;
