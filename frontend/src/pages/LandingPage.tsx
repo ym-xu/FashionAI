@@ -6,6 +6,7 @@ import Masonry from 'react-masonry-css'
 import styles from './LandingPage.module.css'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../config';
 
 
 const images = [
@@ -71,7 +72,7 @@ export default function LandingPage() {
       formData.append('username', email);
       formData.append('password', password);
 
-      const response = await axios.post('/api/login', formData, {
+      const response = await axios.post(`${API_BASE_URL}/api/login`, formData, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
@@ -81,7 +82,6 @@ export default function LandingPage() {
       navigate('/marketplace');
     } catch (error) {
       console.error('登录失败:', error);
-
     }
   };
 
@@ -102,7 +102,7 @@ export default function LandingPage() {
     console.log('Email:', email);
     console.log('Password:', password);
     try {
-      const response = await axios.post('/api/register', { 
+      const response = await axios.post(`${API_BASE_URL}/api/register`, { 
         email, 
         password,
         username: email.split('@')[0]
@@ -112,7 +112,7 @@ export default function LandingPage() {
       localStorage.setItem('token', access_token);
       navigate('/marketplace');
     } catch (error) {
-      console.error('Registration failed:', error);
+      console.error('注册失败:', error);
     }
   };
 

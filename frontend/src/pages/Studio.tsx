@@ -4,6 +4,7 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { uploadToCloudflare } from '../utils/cloudflare';
+import { API_BASE_URL } from '../config';
 
 interface StudioProps {
   onClose: () => void;
@@ -282,7 +283,7 @@ const Studio: React.FC<StudioProps> = ({ onClose }) => {
         return;
       }
 
-      const saveResponse = await fetch('/api/products/', {
+      const saveResponse = await fetch(`${API_BASE_URL}/api/products/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
