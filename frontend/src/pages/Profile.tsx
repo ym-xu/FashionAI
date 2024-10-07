@@ -5,7 +5,7 @@ import { Textarea } from "../components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 import { ScrollArea } from "../components/ui/scroll-area";
 import Masonry from 'react-masonry-css';
-import { Heart, Image as ImageIcon } from "lucide-react";
+import {Image as ImageIcon } from "lucide-react";
 import AppleButton from "../components/AppleButton";
 import AppleInput from "../components/AppleInput";
 
@@ -22,26 +22,26 @@ interface Product {
   type?: string;
 }
 
-const mockFavoriteProducts = [
-  { id: 1, name: "Product 1", image: "https://placehold.co/300x300?text=Product+1", type: "Favorite" },
-  { id: 2, name: "Product 2", image: "https://placehold.co/300x300?text=Product+2", type: "Favorite" },
-  { id: 3, name: "Product 3", image: "https://placehold.co/300x300?text=Product+3", type: "Favorite" },
-];
+// const mockFavoriteProducts = [
+//   { id: 1, name: "Product 1", image: "https://placehold.co/300x300?text=Product+1", type: "Favorite" },
+//   { id: 2, name: "Product 2", image: "https://placehold.co/300x300?text=Product+2", type: "Favorite" },
+//   { id: 3, name: "Product 3", image: "https://placehold.co/300x300?text=Product+3", type: "Favorite" },
+// ];
 
-const mockGeneratedImages = [
-  { id: 1, name: "Generated 1", image: "https://placehold.co/300x300?text=Generated+1", type: "Generated" },
-  { id: 2, name: "Generated 2", image: "https://placehold.co/300x300?text=Generated+2", type: "Generated" },
-  { id: 3, name: "Generated 3", image: "https://placehold.co/300x300?text=Generated+3", type: "Generated" },
-];
+// const mockGeneratedImages = [
+//   { id: 1, name: "Generated 1", image: "https://placehold.co/300x300?text=Generated+1", type: "Generated" },
+//   { id: 2, name: "Generated 2", image: "https://placehold.co/300x300?text=Generated+2", type: "Generated" },
+//   { id: 3, name: "Generated 3", image: "https://placehold.co/300x300?text=Generated+3", type: "Generated" },
+// ];
 
-const PlaceholderImage = ({ text, className }: { text: string, className?: string }) => (
-  <div className={`bg-gray-200 flex items-center justify-center ${className}`}>
-    <div className="text-gray-500 flex flex-col items-center p-4">
-      <ImageIcon className="w-12 h-12 mb-2" />
-      <span className="text-sm text-center">{text}</span>
-    </div>
-  </div>
-);
+// const PlaceholderImage = ({ text, className }: { text: string, className?: string }) => (
+//   <div className={`bg-gray-200 flex items-center justify-center ${className}`}>
+//     <div className="text-gray-500 flex flex-col items-center p-4">
+//       <ImageIcon className="w-12 h-12 mb-2" />
+//       <span className="text-sm text-center">{text}</span>
+//     </div>
+//   </div>
+// );
 
 const Profile = () => {
   const [userData, setUserData] = useState({

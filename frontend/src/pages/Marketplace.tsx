@@ -23,14 +23,14 @@ interface Product {
   created_at: string;
 }
 
-const PlaceholderImage = ({ text, className }: { text: string, className?: string }) => (
-  <div className={`bg-gray-200 flex items-center justify-center ${className}`}>
-    <div className="text-gray-500 flex flex-col items-center p-4">
-      <ImageIcon className="w-12 h-12 mb-2" />
-      <span className="text-sm text-center">{text}</span>
-    </div>
-  </div>
-)
+// const PlaceholderImage = ({ text, className }: { text: string, className?: string }) => (
+//   <div className={`bg-gray-200 flex items-center justify-center ${className}`}>
+//     <div className="text-gray-500 flex flex-col items-center p-4">
+//       <ImageIcon className="w-12 h-12 mb-2" />
+//       <span className="text-sm text-center">{text}</span>
+//     </div>
+//   </div>
+// )
 
 export default function Marketplace() {
   const [products, setProducts] = useState<Product[]>([]);
