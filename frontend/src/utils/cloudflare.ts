@@ -1,9 +1,11 @@
+import { API_BASE_URL } from '../config';
+
 export const uploadToCloudflare = async (imageBlob: Blob): Promise<string> => {
     const formData = new FormData();
     formData.append('file', imageBlob);
   
     try {
-      const response = await fetch('/api/upload-to-cloudflare', {
+      const response = await fetch(`${API_BASE_URL}/api/upload-to-cloudflare`, {
         method: 'POST',
         body: formData
       });
@@ -20,4 +22,4 @@ export const uploadToCloudflare = async (imageBlob: Blob): Promise<string> => {
       console.error('Error uploading to Cloudflare:', error);
       throw error;
     }
-  };
+};
