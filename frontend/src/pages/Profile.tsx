@@ -97,11 +97,12 @@ const Profile = () => {
     }
   };
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="container mx-auto p-4">
-      {if (isLoading) {
-        return <div>Loading...</div>;
-      }}
       <div className="flex items-start mb-8">
         <Avatar className="w-24 h-24 mr-4">
           <AvatarImage src={userData.personal_link} alt={userData.username} />
