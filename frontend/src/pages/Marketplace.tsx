@@ -117,7 +117,6 @@ export default function Marketplace() {
         }
       );
       console.log('Product liked successfully', response.data);
-      // 更新UI逻辑，例如改变心形图标的颜色
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         console.error('Error liking product:', error.response.data);

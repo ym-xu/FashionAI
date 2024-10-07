@@ -10,7 +10,7 @@ import {
   User,
   LogOut,
   CreditCard,
-  X  // Add this line
+  X 
 } from "lucide-react";
 import axios from 'axios';
 import Studio from '../pages/Studio';

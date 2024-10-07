@@ -9,18 +9,12 @@ import { useNavigate } from 'react-router-dom';
 
 
 const images = [
-  "https://placehold.co/300x400?text=AI+Image+1",
-  "https://placehold.co/300x300?text=AI+Image+2",
-  "https://placehold.co/300x500?text=AI+Image+3",
-  "https://placehold.co/300x350?text=AI+Image+4",
-  "https://placehold.co/300x450?text=AI+Image+5",
-  "https://placehold.co/300x300?text=AI+Image+6",
-  "https://placehold.co/300x400?text=AI+Image+7",
-  "https://placehold.co/300x350?text=AI+Image+8",
-  "https://placehold.co/300x500?text=AI+Image+9",
-  "https://placehold.co/300x300?text=AI+Image+10",
-  "https://placehold.co/300x450?text=AI+Image+11",
-  "https://placehold.co/300x400?text=AI+Image+12",
+  "https://app-dynamicmockups-psd-engine-production.s3.eu-central-1.amazonaws.com/variation-exports/bd699776-b70d-4145-a97e-04d8546fdfb0_4eeaa36a-d983-40b3-99b3-e167ed5045bc.png",
+  "https://app-dynamicmockups-psd-engine-production.s3.eu-central-1.amazonaws.com/variation-exports/12a9dc19-a639-4889-91f7-bb26431678d5_d2319d8a-b687-4c75-aa5a-bf7a7251c13f.png",
+  "https://app-dynamicmockups-psd-engine-production.s3.eu-central-1.amazonaws.com/variation-exports/e43fcc44-572b-493c-b4e1-3cfca10a8fea_372b4ab1-2bff-4634-b88e-911ea2bf7a14.png",
+  "https://app-dynamicmockups-psd-engine-production.s3.eu-central-1.amazonaws.com/variation-exports/0b1abc06-fa0e-4d2d-94ec-00f6b86ac9da_caf35b76-2d08-484a-8e74-2a456b0a049c.png",
+  "https://app-dynamicmockups-psd-engine-production.s3.eu-central-1.amazonaws.com/variation-exports/f13215c2-6eb0-4b9a-9777-5f395665e2e2_a6ed355b-e6cf-4272-87d6-94289efdaeb4.png",
+  "https://app-dynamicmockups-psd-engine-production.s3.eu-central-1.amazonaws.com/variation-exports/dc381406-4745-4838-bfb4-0050f7c1d9e5_2d6b89fe-3a54-4e30-951a-e48da24ab6df.png",
 ]
 
 export default function LandingPage() {
@@ -84,10 +78,10 @@ export default function LandingPage() {
       });
       const { access_token } = response.data;
       localStorage.setItem('token', access_token);
-      navigate('/marketplace'); // 这里改为 '/marketplace'
+      navigate('/marketplace');
     } catch (error) {
       console.error('登录失败:', error);
-      // 添加错误处理,例如显示错误消息
+
     }
   };
 
@@ -116,7 +110,7 @@ export default function LandingPage() {
       console.log('Register response:', response.data);
       const { access_token } = response.data;
       localStorage.setItem('token', access_token);
-      navigate('/marketplace'); // Changed from '/dashboard' to '/marketplace'
+      navigate('/marketplace');
     } catch (error) {
       console.error('Registration failed:', error);
     }
