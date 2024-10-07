@@ -11,3 +11,4 @@ httpx==0.23.3
 python-dotenv==0.21.1
 psycopg2-binary==2.9.3
 tenacity==8.0.1
+requests==2.28.2
