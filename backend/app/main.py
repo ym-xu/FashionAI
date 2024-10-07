@@ -11,9 +11,11 @@ load_dotenv()
 
 app = FastAPI(title=settings.PROJECT_NAME)
 
+ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "https://fashionai.pages.dev,https://api.cloudflare.com,https://imagedelivery.net").split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://fashionai.pages.dev", "https://api.cloudflare.com"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
