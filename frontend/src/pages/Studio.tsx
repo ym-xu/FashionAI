@@ -110,6 +110,10 @@ const generateProductImage = async (productType: ProductType, imageBlob: Blob, u
     }
   };
 
+  const handleRetry = (currentRetries: number) => {
+    // 使用 currentRetries 而不是直接引用外部的 retries
+  };
+
   while (retries < maxRetries) {
     try {
       console.log(`Attempt ${retries + 1}: Sending request to backend API...`);
@@ -148,6 +152,7 @@ const generateProductImage = async (productType: ProductType, imageBlob: Blob, u
       }
     } catch (error) {
       console.error(`Attempt ${retries + 1} failed:`, error);
+      handleRetry(retries);
       retries++;
       if (retries >= maxRetries) {
         throw new Error(`Failed to generate product image: ${error instanceof Error ? error.message : 'Unknown error'}`);
