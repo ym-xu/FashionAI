@@ -232,9 +232,16 @@ const Studio: React.FC<StudioProps> = ({ onClose }) => {
         const cloudflareImageUrl = await uploadToCloudflare(imageBlob);
         console.log('Cloudflare image URL:', cloudflareImageUrl);
 
+        // 这里添加后续的产品创建逻辑
+        // ...
+
       } catch (error) {
         console.error('Error creating product:', error);
-        alert(`创建产品失败: ${error instanceof Error ? error.message : '未知错误'}`);
+        if (error instanceof Error) {
+          alert(`创建产品失败: ${error.message}`);
+        } else {
+          alert('创建产品失败: 未知错误');
+        }
       } finally {
         setIsCreatingProduct(false);
       }
