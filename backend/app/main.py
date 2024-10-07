@@ -13,7 +13,7 @@ app = FastAPI(title=settings.PROJECT_NAME)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://fashionai.pages.dev"],
+    allow_origins=["https://fashionai.pages.dev", "https://api.cloudflare.com"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
