@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, File, UploadFile
 from sqlalchemy.orm import Session
 from app.crud import product as crud_product, crud_favorite
 from app.schemas import Product, ProductCreate, ProductOut
@@ -10,6 +10,7 @@ import httpx
 from tenacity import retry, stop_after_attempt, wait_fixed
 import logging
 from app.schemas.product import ProductLike
+from fastapi.responses import JSONResponse
 
 logger = logging.getLogger(__name__)
 
@@ -147,3 +148,14 @@ def like_product(
     except Exception as e:
         logger.error(f"Error liking product: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal server error")
+
+@router.post("/upload-to-cloudflare")
+async def upload_to_cloudflare(file: UploadFile = File(...)):
+    try:
+        # 实现 Cloudflare 上传逻辑
+        # ...
+
+        return JSONResponse(content={"url": cloudflare_url})
+    except Exception as e:
+        logger.error(f"Error uploading to Cloudflare: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
