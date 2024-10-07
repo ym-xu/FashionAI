@@ -123,7 +123,7 @@ const generateProductImage = async (productType: ProductType, imageBlob: Blob, u
         throw new Error('No authentication token found');
       }
 
-      const response = await fetch('/api/products/generate-product-image', {
+      const response = await fetch(`${API_BASE_URL}/api/products/generate-product-image`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
