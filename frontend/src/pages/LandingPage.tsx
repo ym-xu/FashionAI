@@ -8,6 +8,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from '../config';
 
+axios.defaults.withCredentials = true;
 
 const images = [
   "https://app-dynamicmockups-psd-engine-production.s3.eu-central-1.amazonaws.com/variation-exports/bd699776-b70d-4145-a97e-04d8546fdfb0_4eeaa36a-d983-40b3-99b3-e167ed5045bc.png",
@@ -75,7 +76,8 @@ export default function LandingPage() {
       const response = await axios.post(`${API_BASE_URL}/api/login`, formData, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
-        }
+        },
+        withCredentials: true
       });
       const { access_token } = response.data;
       localStorage.setItem('token', access_token);
@@ -102,10 +104,12 @@ export default function LandingPage() {
     console.log('Email:', email);
     console.log('Password:', password);
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/register`, { 
-        email, 
+      const response = await axios.post(`${API_BASE_URL}/api/register`, {
+        email,
         password,
         username: email.split('@')[0]
+      }, {
+        withCredentials: true
       });
       console.log('Register response:', response.data);
       const { access_token } = response.data;
