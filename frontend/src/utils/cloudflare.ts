@@ -5,7 +5,7 @@ export const uploadToCloudflare = async (imageBlob: Blob): Promise<string> => {
     formData.append('file', imageBlob);
   
     try {
-      const response = await fetch(`${API_BASE_URL}/api/upload-to-cloudflare`, {
+      const response = await fetch('https://fashionai-5n0f.onrender.com/api/upload-to-cloudflare', {
         method: 'POST',
         body: formData
       });
