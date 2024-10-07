@@ -23,15 +23,6 @@ interface Product {
   created_at: string;
 }
 
-// const PlaceholderImage = ({ text, className }: { text: string, className?: string }) => (
-//   <div className={`bg-gray-200 flex items-center justify-center ${className}`}>
-//     <div className="text-gray-500 flex flex-col items-center p-4">
-//       <ImageIcon className="w-12 h-12 mb-2" />
-//       <span className="text-sm text-center">{text}</span>
-//     </div>
-//   </div>
-// )
-
 export default function Marketplace() {
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedType, setSelectedType] = useState("All")
@@ -40,15 +31,10 @@ export default function Marketplace() {
     threshold: 0
   });
 
-  const [isLoading,setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const fetchProducts = async () => {
-      setIsLoading(true);
-      setError(null);
       try {
         const response = await axios.get<Product[]>('http://localhost:8000/api/products/', {
           params: {
@@ -59,9 +45,6 @@ export default function Marketplace() {
         setVisibleProducts(response.data.slice(0, 20));
       } catch (error) {
         console.error('Error fetching products:', error);
-        setError('Failed to fetch products. Please try again later.');
-      } finally {
-        setIsLoading(false);
       }
     };
 
