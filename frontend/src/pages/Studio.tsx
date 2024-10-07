@@ -225,28 +225,32 @@ const Studio: React.FC<StudioProps> = ({ onClose }) => {
           throw new Error('No image selected');
         }
 
+        // Check if the product type is implemented
+        const { mockup_uuid, smart_object_uuid } = productImages[selectedProduct];
+        if (!mockup_uuid || !smart_object_uuid) {
+          throw new Error(`Product type ${selectedProduct} is not yet implemented`);
+        }
+
+        // Fetch the image as a blob
         const response = await fetch(selectedImage.url);
         const imageBlob = await response.blob();
 
-        console.log('Uploading image to Cloudflare...');
-        const cloudflareImageUrl = await uploadToCloudflare(imageBlob);
-        console.log('Cloudflare image URL:', cloudflareImageUrl);
-
-        // 这里添加后续的产品创建逻辑
-        // ...
+        const productImageUrls = await generateProductImage(selectedProduct, imageBlob, 'currentUser', prompt, selectedStyle);
+        console.log('Product image generated successfully:', productImageUrls);
+        setFinalProducts(productImageUrls);
 
       } catch (error) {
         console.error('Error creating product:', error);
         if (error instanceof Error) {
-          alert(`创建产品失败: ${error.message}`);
+          alert(`Failed to create product: ${error.message}`);
         } else {
-          alert('创建产品失败: 未知错误');
+          alert('Failed to create product. Please try again.');
         }
       } finally {
         setIsCreatingProduct(false);
       }
     } else {
-      alert('请选择一个产品类型和生成的图片。');
+      alert('Please select a product type and a generated image.');
     }
   };
 
@@ -291,7 +295,6 @@ const Studio: React.FC<StudioProps> = ({ onClose }) => {
       if (!saveResponse.ok) {
         if (saveResponse.status === 403) {
           alert('Your session has expired. Please log in again.');
-          // 这里应该添加重定向到登录页面的逻辑
           return;
         }
         throw new Error(`Failed to save product to database: ${saveResponse.statusText}`);
