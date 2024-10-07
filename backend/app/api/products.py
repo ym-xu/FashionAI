@@ -148,14 +148,3 @@ def like_product(
     except Exception as e:
         logger.error(f"Error liking product: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal server error")
-
-@router.post("/upload-to-cloudflare")
-async def upload_to_cloudflare(file: UploadFile = File(...)):
-    try:
-        # 实现 Cloudflare 上传逻辑
-        # ...
-
-        return JSONResponse(content={"url": cloudflare_url})
-    except Exception as e:
-        logger.error(f"Error uploading to Cloudflare: {str(e)}")
-        raise HTTPException(status_code=500, detail=str(e))
