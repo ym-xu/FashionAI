@@ -12,6 +12,7 @@ import {
 import { Input } from "../components/ui/input"
 import { cn } from "../lib/utils"
 import axios from 'axios';
+import { API_BASE_URL } from '../config';
 
 interface Product {
   id: number;
@@ -36,7 +37,7 @@ export default function Marketplace() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get<Product[]>('http://localhost:8000/api/products/', {
+        const response = await axios.get<Product[]>(`${API_BASE_URL}/api/products/`, {
           params: {
             search: searchTerm
           }
@@ -90,7 +91,7 @@ export default function Marketplace() {
         return;
       }
       const response = await axios.post(
-        'http://localhost:8000/api/products/like',
+        `${API_BASE_URL}/api/products/like`,
         { product_id: productId },
         {
           headers: { 
