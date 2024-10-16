@@ -156,10 +156,27 @@ def unlike_product(
     current_user: User = Depends(deps.get_current_user),
 ):
     try:
+        print(f"Attempting to unlike product {product_like.product_id} for user {current_user.id}")
         crud_favorite.remove_favorite(db, user_id=current_user.id, product_id=product_like.product_id)
+        print(f"Successfully unliked product {product_like.product_id}")
         return {"status": "success", "message": "Product unliked successfully"}
     except ValueError as e:
+        print(f"Error unliking product: {str(e)}")
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
+        print(f"Unexpected error unliking product: {str(e)}")
         logger.error(f"Error unliking product: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal server error")
+
+def remove_favorite(db: Session, user_id: int, product_id: int):
+    favorite = db.query(models.Favorite).filter(
+        models.Favorite.user_id == user_id,
+        models.Favorite.product_id == product_id
+    ).first()
+    if favorite:
+        db.delete(favorite)
+        db.commit()
+        print(f"Favorite removed: user_id={user_id}, product_id={product_id}")
+    else:
+        print(f"Favorite not found: user_id={user_id}, product_id={product_id}")
+        raise ValueError("Favorite not found")

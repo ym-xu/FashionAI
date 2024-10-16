@@ -126,6 +126,7 @@ export default function Marketplace() {
       console.log(`Product ${isCurrentlyLiked ? 'unliked' : 'liked'} successfully`);
     } catch (error) {
       console.error('Error liking/unliking product:', error);
+      alert('Failed to update like status. Please try again.');
     }
   };
 
