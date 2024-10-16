@@ -81,6 +81,7 @@ export default function LandingPage() {
   const [password, setPassword] = useState('');
   const [isLogin, setIsLogin] = useState(true);
   const navigate = useNavigate();
+  const [loginError, setLoginError] = useState('');
 
   // Smooth scroll effect
   useEffect(() => {
@@ -124,6 +125,7 @@ export default function LandingPage() {
 
   const handleLogin = async () => {
     try {
+      setLoginError('');
       const formData = new FormData();
       formData.append('username', email);
       formData.append('password', password);
@@ -139,6 +141,17 @@ export default function LandingPage() {
       navigate('/marketplace');
     } catch (error) {
       console.error('Login failed:', error);
+      if (axios.isAxiosError(error) && error.response) {
+        if (error.response.status === 401) {
+          setLoginError('Invalid email or password');
+        } else if (error.response.status === 404) {
+          setLoginError('User not found');
+        } else {
+          setLoginError('An error occurred. Please try again.');
+        }
+      } else {
+        setLoginError('An error occurred. Please try again.');
+      }
     }
   };
 
@@ -182,12 +195,66 @@ export default function LandingPage() {
   });
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 min-h-screen bg-background">
-      {/* Left side: Scrolling Pictures */}
-      <div className="lg:col-span-2 p-6 bg-muted overflow-hidden">
+    <div className="flex flex-col lg:grid lg:grid-cols-3 min-h-screen bg-background">
+      {/* Login/Register Section */}
+      <div className="order-1 lg:order-2 lg:col-span-1 p-6 flex items-center justify-center">
+        <div className="w-full max-w-sm space-y-6">
+          <div className="text-center space-y-2">
+            <h1 className="text-3xl font-bold">Welcome to AI Picture Pro</h1>
+            <p className="text-muted-foreground">Sign in or register to start creating amazing AI-generated pictures</p>
+          </div>
+
+          <div className="flex space-x-2 mb-4">
+            <Button 
+              className={`w-1/2 ${isLogin ? '' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`} 
+              onClick={() => setIsLogin(true)}
+            >
+              Log In
+            </Button>
+            <Button 
+              className={`w-1/2 ${!isLogin ? '' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`} 
+              onClick={() => setIsLogin(false)}
+            >
+              Register
+            </Button>
+          </div>
+
+          <div className="space-y-4">
+            {loginError && (
+              <div className="text-red-500 text-sm">{loginError}</div>
+            )}
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input 
+                id="email" 
+                type="email" 
+                placeholder="Enter your email" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input 
+                id="password" 
+                type="password" 
+                placeholder="Enter your password" 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            <Button className="w-full" onClick={isLogin ? handleLogin : handleRegister}>
+              {isLogin ? 'Log In' : 'Register'}
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Scrolling Pictures */}
+      <div className="order-2 lg:order-1 lg:col-span-2 p-6 bg-muted overflow-hidden">
         <div 
           ref={scrollRef}
-          className="h-[calc(100vh-3rem)] overflow-hidden relative"
+          className="h-[50vh] lg:h-[calc(100vh-3rem)] overflow-hidden relative"
           style={{ maskImage: 'linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%)' }}
         >
           <div className="absolute top-0 left-0 w-full">
@@ -213,57 +280,6 @@ export default function LandingPage() {
                 )
               })}
             </Masonry>
-          </div>
-        </div>
-      </div>
-
-      {/* Right side: Login */}
-      <div className="p-6 flex items-center justify-center">
-        <div className="w-full max-w-sm space-y-6">
-          <div className="text-center space-y-2">
-            <h1 className="text-3xl font-bold">Welcome to AI Picture Pro</h1>
-            <p className="text-muted-foreground">Sign in or register to start creating amazing AI-generated pictures</p>
-          </div>
-
-          <div className="flex space-x-2 mb-4">
-            <Button 
-              className={`w-1/2 ${isLogin ? '' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`} 
-              onClick={() => setIsLogin(true)}
-            >
-              Log In
-            </Button>
-            <Button 
-              className={`w-1/2 ${!isLogin ? '' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`} 
-              onClick={() => setIsLogin(false)}
-            >
-              Register
-            </Button>
-          </div>
-
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input 
-                id="email" 
-                type="email" 
-                placeholder="Enter your email" 
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input 
-                id="password" 
-                type="password" 
-                placeholder="Enter your password" 
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-            <Button className="w-full" onClick={isLogin ? handleLogin : handleRegister}>
-              {isLogin ? 'Log In' : 'Register'}
-            </Button>
           </div>
         </div>
       </div>
