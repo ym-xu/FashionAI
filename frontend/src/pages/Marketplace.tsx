@@ -40,13 +40,18 @@ export default function Marketplace() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get<Product[]>(`${API_BASE_URL}/api/products/`, {
-          params: {
-            search: searchTerm
-          }
-        });
-        setProducts(response.data);
-        setVisibleProducts(response.data.slice(0, 20));
+        const token = localStorage.getItem('token');
+        const [productsResponse, likedProductsResponse] = await Promise.all([
+          axios.get<Product[]>(`${API_BASE_URL}/api/products/`, {
+            params: { search: searchTerm }
+          }),
+          axios.get<Product[]>(`${API_BASE_URL}/api/products/user/favorites`, {
+            headers: { Authorization: `Bearer ${token}` }
+          })
+        ]);
+        setProducts(productsResponse.data);
+        setVisibleProducts(productsResponse.data.slice(0, 20));
+        setLikedProducts(new Set(likedProductsResponse.data.map(product => product.id)));
       } catch (error) {
         console.error('Error fetching products:', error);
       }
@@ -97,7 +102,7 @@ export default function Marketplace() {
       const isCurrentlyLiked = likedProducts.has(productId);
       const endpoint = isCurrentlyLiked ? 'unlike' : 'like';
 
-      const response = await axios.post(
+      await axios.post(
         `${API_BASE_URL}/api/products/${endpoint}`,
         { product_id: productId },
         {
@@ -118,13 +123,9 @@ export default function Marketplace() {
         return newSet;
       });
 
-      console.log(`Product ${isCurrentlyLiked ? 'unliked' : 'liked'} successfully`, response.data);
+      console.log(`Product ${isCurrentlyLiked ? 'unliked' : 'liked'} successfully`);
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        console.error('Error liking/unliking product:', error.response.data);
-      } else {
-        console.error('Error liking/unliking product:', error);
-      }
+      console.error('Error liking/unliking product:', error);
     }
   };
 
