@@ -22,6 +22,7 @@ interface Product {
   product_image_url: string;
   creator_name: string;
   created_at: string;
+  is_liked?: boolean;
 }
 
 export default function Marketplace() {
@@ -33,6 +34,8 @@ export default function Marketplace() {
   });
 
   const [searchTerm, setSearchTerm] = useState("");
+
+  const [likedProducts, setLikedProducts] = useState<Set<number>>(new Set());
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -90,8 +93,12 @@ export default function Marketplace() {
         alert('You need to be logged in to like a product');
         return;
       }
+
+      const isCurrentlyLiked = likedProducts.has(productId);
+      const endpoint = isCurrentlyLiked ? 'unlike' : 'like';
+
       const response = await axios.post(
-        `${API_BASE_URL}/api/products/like`,
+        `${API_BASE_URL}/api/products/${endpoint}`,
         { product_id: productId },
         {
           headers: { 
@@ -100,13 +107,24 @@ export default function Marketplace() {
           }
         }
       );
-      console.log('Product liked successfully', response.data);
+
+      setLikedProducts(prev => {
+        const newSet = new Set(prev);
+        if (isCurrentlyLiked) {
+          newSet.delete(productId);
+        } else {
+          newSet.add(productId);
+        }
+        return newSet;
+      });
+
+      console.log(`Product ${isCurrentlyLiked ? 'unliked' : 'liked'} successfully`, response.data);
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        console.error('Error liking product:', error.response.data);
-        alert(error.response.data.detail || 'An error occurred while liking the product');
+        console.error('Error liking/unliking product:', error.response.data);
+        alert(error.response.data.detail || 'An error occurred while liking/unliking the product');
       } else {
-        console.error('Error liking product:', error);
+        console.error('Error liking/unliking product:', error);
         alert('An unexpected error occurred');
       }
     }
@@ -173,11 +191,12 @@ export default function Marketplace() {
                       />
                       <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-opacity duration-300 rounded-t-lg flex items-center justify-center">
                         <Button 
-                          className="opacity-0 group-hover:opacity-100 transition-opacity duration-300" 
+                          className={`opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${likedProducts.has(product.id) ? 'bg-red-500 text-white' : ''}`}
                           variant="secondary"
                           onClick={() => handleLike(product.id)}
                         >
-                          <Heart className="mr-2 h-4 w-4" /> Like
+                          <Heart className={`mr-2 h-4 w-4 ${likedProducts.has(product.id) ? 'fill-current' : ''}`} />
+                          {likedProducts.has(product.id) ? 'Liked' : 'Like'}
                         </Button>
                       </div>
                     </div>
