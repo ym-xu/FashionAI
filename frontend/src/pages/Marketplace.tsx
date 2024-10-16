@@ -114,11 +114,11 @@ export default function Marketplace() {
 
   return (
     <div className="flex flex-col h-screen bg-gray-50">
-      <div className="p-6 border-b bg-white shadow-sm">
-        <h1 className="text-2xl font-bold mb-6 text-gray-800">Marketplace</h1>
+      <div className="p-4 sm:p-6 border-b bg-white shadow-sm">
+        <h1 className="text-2xl font-bold mb-4 text-gray-800">Marketplace</h1>
         
-        <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
-          <div className="relative w-full md:w-1/3">
+        <div className="flex flex-col space-y-4">
+          <div className="relative w-full">
             <Input 
               type="search" 
               placeholder="Search products..." 
@@ -133,8 +133,8 @@ export default function Marketplace() {
             </div>
           </div>
           
-          <div className="flex-grow overflow-x-auto">
-            <div className="flex items-center space-x-2 bg-gray-100 p-1 rounded-full">
+          <div className="overflow-x-auto -mx-4 sm:mx-0">
+            <div className="flex items-center space-x-2 bg-gray-100 p-1 rounded-full min-w-max px-4 sm:px-1">
               {productTypes.map((type) => (
                 <button
                   key={type}

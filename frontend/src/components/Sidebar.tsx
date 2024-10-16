@@ -98,7 +98,7 @@ const Sidebar: React.FC = () => {
           </button>
         </nav>
         <div className="mt-auto flex flex-col space-y-3">
-          <SidebarButton 
+          {/* <SidebarButton 
             icon={Settings} 
             isActive={location.pathname === "/settings"} 
             href="/marketplace" 
@@ -107,7 +107,7 @@ const Sidebar: React.FC = () => {
             icon={HelpCircle} 
             isActive={location.pathname === "/help"} 
             href="/marketplace" 
-          />
+          /> */}
           <button 
             onClick={() => setIsNotificationOpen(!isNotificationOpen)}
             className={cn(
@@ -143,10 +143,10 @@ const Sidebar: React.FC = () => {
                 <User className="mr-2 h-4 w-4" />
                 Profile
               </Link>
-              <button className="w-full text-left px-2 py-1 hover:bg-gray-100 rounded flex items-center">
+              {/* <button className="w-full text-left px-2 py-1 hover:bg-gray-100 rounded flex items-center">
                 <CreditCard className="mr-2 h-4 w-4" />
                 Billing
-              </button>
+              </button> */}
               <button className="w-full text-left px-2 py-1 hover:bg-gray-100 rounded flex items-center">
                 <Settings className="mr-2 h-4 w-4" />
                 Settings

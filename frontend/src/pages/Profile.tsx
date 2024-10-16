@@ -9,6 +9,7 @@ import {Image as ImageIcon } from "lucide-react";
 import AppleButton from "../components/AppleButton";
 import AppleInput from "../components/AppleInput";
 import { API_BASE_URL } from '../config';
+import { Button } from "../components/ui/button";
 
 interface Product {
   id: number;
@@ -115,7 +116,18 @@ const Profile = () => {
             <AppleButton onClick={() => setIsEditing(true)}>Edit profile</AppleButton>
           </div>
           <p className="text-gray-600 mb-2">{userData.email}</p>
-          <p className="mb-2">{userData.bio || '+ Add bio'}</p>
+          {userData.bio ? (
+            <p className="mb-2">{userData.bio}</p>
+          ) : (
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => setIsEditing(true)}
+              className="mb-2"
+            >
+              + Add bio
+            </Button>
+          )}
           {userData.personal_link && (
             <a 
               href={userData.personal_link.startsWith('http') ? userData.personal_link : `https://${userData.personal_link}`} 
