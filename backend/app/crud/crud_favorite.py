@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from app.models.favorite import Favorite
+from app import models
 
 def create_favorite(db: Session, user_id: int, product_id: int):
     try:

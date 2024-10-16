@@ -165,13 +165,13 @@ def unlike_product(
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         print(f"Unexpected error unliking product: {str(e)}")
-        logger.error(f"Error unliking product: {str(e)}")
+        logger.error(f"Error unliking product: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail="Internal server error")
 
 def remove_favorite(db: Session, user_id: int, product_id: int):
-    favorite = db.query(models.Favorite).filter(
-        models.Favorite.user_id == user_id,
-        models.Favorite.product_id == product_id
+    favorite = db.query(Favorite).filter(
+        Favorite.user_id == user_id,
+        Favorite.product_id == product_id
     ).first()
     if favorite:
         db.delete(favorite)
