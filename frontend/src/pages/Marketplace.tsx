@@ -122,10 +122,8 @@ export default function Marketplace() {
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         console.error('Error liking/unliking product:', error.response.data);
-        alert(error.response.data.detail || 'An error occurred while liking/unliking the product');
       } else {
         console.error('Error liking/unliking product:', error);
-        alert('An unexpected error occurred');
       }
     }
   };
@@ -183,27 +181,28 @@ export default function Marketplace() {
               filteredProducts.map((product: Product) => (
                 <div key={product.id} className="mb-6 transform transition-all duration-200 hover:scale-105">
                   <div className="bg-white rounded-lg overflow-hidden shadow-md">
-                    <div className="relative group">
+                    <div className="relative">
                       <img
                         src={product.product_image_url}
                         alt={product.prompt}
                         className="w-full object-cover rounded-t-lg"
                       />
-                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-opacity duration-300 rounded-t-lg flex items-center justify-center">
-                        <Button 
-                          className={`opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${likedProducts.has(product.id) ? 'bg-red-500 text-white' : ''}`}
-                          variant="secondary"
-                          onClick={() => handleLike(product.id)}
-                        >
-                          <Heart className={`mr-2 h-4 w-4 ${likedProducts.has(product.id) ? 'fill-current' : ''}`} />
-                          {likedProducts.has(product.id) ? 'Liked' : 'Like'}
-                        </Button>
-                      </div>
                     </div>
-                    <div className="p-4">
-                      {/* <h3 className="font-semibold text-lg text-gray-800">{product.prompt}</h3> */}
-                      <p className="text-sm text-gray-600 mt-1">{product.creator_name}</p>
-                      <p className="text-xs text-gray-500 mt-1">{new Date(product.created_at).toLocaleDateString()}</p>
+                    <div className="p-4 flex justify-between items-center">
+                      <div>
+                        <p className="text-sm text-gray-600">{product.creator_name}</p>
+                        <p className="text-xs text-gray-500">{new Date(product.created_at).toLocaleDateString()}</p>
+                      </div>
+                      <button
+                        onClick={() => handleLike(product.id)}
+                        className="focus:outline-none"
+                      >
+                        <Heart
+                          className={`h-6 w-6 transition-colors duration-200 ${
+                            likedProducts.has(product.id) ? 'text-red-500 fill-current' : 'text-gray-400'
+                          }`}
+                        />
+                      </button>
                     </div>
                   </div>
                 </div>

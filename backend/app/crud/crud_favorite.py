@@ -12,3 +12,14 @@ def create_favorite(db: Session, user_id: int, product_id: int):
     except IntegrityError:
         db.rollback()
         raise ValueError("You have already liked this product")
+
+def remove_favorite(db: Session, user_id: int, product_id: int):
+    favorite = db.query(models.Favorite).filter(
+        models.Favorite.user_id == user_id,
+        models.Favorite.product_id == product_id
+    ).first()
+    if favorite:
+        db.delete(favorite)
+        db.commit()
+    else:
+        raise ValueError("Favorite not found")

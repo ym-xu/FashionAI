@@ -148,3 +148,18 @@ def like_product(
     except Exception as e:
         logger.error(f"Error liking product: {str(e)}")
         raise HTTPException(status_code=500, detail="Internal server error")
+
+@router.post("/unlike", response_model=dict)
+def unlike_product(
+    product_like: ProductLike,
+    db: Session = Depends(deps.get_db),
+    current_user: User = Depends(deps.get_current_user),
+):
+    try:
+        crud_favorite.remove_favorite(db, user_id=current_user.id, product_id=product_like.product_id)
+        return {"status": "success", "message": "Product unliked successfully"}
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error(f"Error unliking product: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
