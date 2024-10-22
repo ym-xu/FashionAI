@@ -23,11 +23,8 @@ def send_verification_code(email: str, db: Session = Depends(deps.get_db)):
     
     verification_code = generate_verification_code()
     
-    # 在这里存储验证码,可以使用Redis或数据库
-    # 为了简单起见,这里我们假设有一个函数来存储验证码
     crud.user.store_verification_code(db, email, verification_code)
     
-    # 使用SendGrid发送邮件
     sg = sendgrid.SendGridAPIClient(api_key=settings.SENDGRID_API_KEY)
     from_email = Email(settings.SENDGRID_SENDER_EMAIL)
     to_email = To(email)
@@ -73,10 +70,16 @@ async def register(user_in: schemas.UserCreate, db: Session = Depends(deps.get_d
 @router.post("/login", response_model=schemas.Token)
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(deps.get_db)):
     print(f"Login attempt for username: {form_data.username}")
-    user = crud.user.authenticate(db, email=form_data.username, password=form_data.password)
+    user = crud.user.get_user_by_email(db, email=form_data.username)
     if not user:
+        print(f"User not found: {form_data.username}")
+        raise HTTPException(status_code=404, detail="user not found")
+    
+    authenticated_user = crud.user.authenticate(db, email=form_data.username, password=form_data.password)
+    if not authenticated_user:
         print(f"Authentication failed for username: {form_data.username}")
-        raise HTTPException(status_code=400, detail="Incorrect email or password")
+        raise HTTPException(status_code=401, detail="email or password is incorrect")
+    
     print(f"Authentication successful for username: {form_data.username}")
-    access_token = security.create_access_token(user.id)
+    access_token = security.create_access_token(authenticated_user.id)
     return {"access_token": access_token, "token_type": "bearer"}

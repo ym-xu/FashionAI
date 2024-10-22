@@ -143,14 +143,14 @@ export default function LandingPage() {
       console.error('Login failed:', error);
       if (axios.isAxiosError(error) && error.response) {
         if (error.response.status === 401) {
-          setLoginError('Invalid email or password');
+          setLoginError('email or password is incorrect');
         } else if (error.response.status === 404) {
-          setLoginError('User not found');
+          setLoginError('user not found');
         } else {
-          setLoginError('An error occurred. Please try again.');
+          setLoginError('login failed, please try again later');
         }
       } else {
-        setLoginError('An error occurred. Please try again.');
+        setLoginError('login failed, please try again later');
       }
     }
   };
